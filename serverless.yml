@@ -1,0 +1,58 @@
+service: line-bot-sawayaka-ikitai
+provider:
+  name: aws
+  runtime: nodejs8.10
+  stage: dev
+  region: ap-northeast-1
+  deploymentBucket: serverless-upload-ap-northeast-1
+  versionFunctions: false
+#  iamRoleStatements:
+#    - Effect: "Allow"
+#      Action:
+#        - "s3:ListBucket"
+#      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
+#    - Effect: "Allow"
+#      Action:
+#        - "s3:PutObject"
+#      Resource:
+#        Fn::Join:
+#          - ""
+#          - - "arn:aws:s3:::"
+#            - "Ref" : "ServerlessDeploymentBucket"
+#            - "/*"
+
+functions:
+  callback:
+    handler: handler.callback
+    events:
+      - http:
+          path: callback
+          method: post
+#    environment:
+#      variable2: value2
+
+resources:
+  Resources:
+    ## dns setting
+    Domain:
+      Type: AWS::ApiGateway::DomainName
+      Properties:
+        CertificateArn: "${ssm:/acm/camelon.info~true}"
+        DomainName: "sawayaka.camelon.info"
+
+    Mapping:
+      Type: AWS::ApiGateway::BasePathMapping
+      Properties:
+        DomainName: { Ref: Domain }
+        RestApiId:  { Ref: ApiGatewayRestApi }
+        Stage: dev
+
+    RecordSetOfAPI:
+      Type: AWS::Route53::RecordSet
+      Properties:
+        Name: "sawayaka.camelon.info"
+        Type: A
+        HostedZoneName: "camelon.info."
+        AliasTarget:
+          DNSName: { Fn::GetAtt: [Domain, DistributionDomainName] }
+          HostedZoneId: Z2FDTNDATAQYW2
