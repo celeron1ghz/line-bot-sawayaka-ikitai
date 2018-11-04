@@ -28,8 +28,9 @@ functions:
       - http:
           path: callback
           method: post
-#    environment:
-#      variable2: value2
+    environment:
+      LINE_ACCESS_TOKEN: "${ssm:/line/dia/access_token~true}"
+      LINE_CHANNEL_SECRET: "${ssm:/line/dia/channel_secret~true}"
 
 resources:
   Resources:
