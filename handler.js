@@ -55,7 +55,7 @@ module.exports.callback = async (event, context) => {
 
     const text = mess.message.text;
 
-    if (text && !text.match(/ゅびぃ、さわやかいきたい/))    {
+    if (text !== 'ゅびぃ、さわやかいきたい')    {
       return context.succeed({ statusCode: 200 });
     }
 
@@ -74,6 +74,7 @@ module.exports.callback = async (event, context) => {
       'text': sendMessage.join("\n"),
     })
 
+    console.log("ぅゅ！");
     return context.succeed({ statusCode: 200 });
 
   } catch (e) {
