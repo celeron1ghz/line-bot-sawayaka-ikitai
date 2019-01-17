@@ -8,6 +8,7 @@ const ua = require('superagent');
 const SawayakaStores = [
   'KR00398061', // 函南
   'KR00299583', // 沼津学園通り
+  'KR00299563', // 御殿場
 ];
 
 async function getSawayakaStoreStatus() {
