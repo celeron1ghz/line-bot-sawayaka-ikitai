@@ -55,7 +55,7 @@ module.exports.callback = async (event, context) => {
 
     const text = mess.message.text;
 
-    if (!text.match(/ぅゅ/))    {
+    if (text && !text.match(/ゅびぃ、さわやかいきたい/))    {
       return context.succeed({ statusCode: 200 });
     }
 
@@ -63,7 +63,7 @@ module.exports.callback = async (event, context) => {
     const sendMessage = [];
 
     sendMessage.push(
-      '沼津近辺のさわやかの混雑状況をお知らせしますわ。',
+      'ルビィのために沼津近辺のさわやかの混雑状況を調べてきましたわ。',
       '',
       storeStatuses.map(s => `${s.storeName}は ${s.waitCount}組で${s.waitTime}待ち`).join('、'),
       'ですわ。'
