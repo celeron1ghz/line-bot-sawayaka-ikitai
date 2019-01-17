@@ -15,7 +15,8 @@
 ## SETUP ENVIRONMENT VARIABLES
 Set these value to `EC2 Parameter Store`.
 
- * TBD
+ * `/line/dia/access_token`: line's access_token
+ * `/line/dia/channel_secret`: line's channel_secret
 
 
 ## SETUP SERVERLESS SCRIPT
