@@ -63,12 +63,22 @@ module.exports.callback = async (event, context) => {
     const storeStatuses = await getSawayakaStoreStatus();
     const sendMessage = [];
 
-    sendMessage.push(
-      'ルビィのために沼津近辺のさわやかの混雑状況を調べてきましたわ。',
-      '',
-      storeStatuses.map(s => `${s.storeName}は ${s.waitCount}組で${s.waitTime}待ち`).join('、'),
-      'ですわ。'
-    );
+    const notInBusinessHourStores = storeStatuses.filter(s => s.waitCount === "-" && s.waitTime === "-");
+
+    if (notInBusinessHourStores.length === storeStatuses.length)    {
+      sendMessage.push( '沼津近辺のさわやかは全て営業時間外ですわ。');
+    } else {
+      sendMessage.push(
+        'ルビィのために沼津近辺のさわやかの混雑状況を調べてきましたわ。',
+        '',
+        storeStatuses.map(
+          s => s.waitCount === "-" && s.waitTime === "-"
+            ? `${s.storeName}は 営業時間外`
+            : `${s.storeName}は ${s.waitCount}組で${s.waitTime}待ち`
+        ).join('、'),
+        'ですわ。'
+      );
+    }
 
     await client.replyMessage(mess.replyToken, {
       'type': 'text',
