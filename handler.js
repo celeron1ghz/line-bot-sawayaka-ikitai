@@ -71,11 +71,17 @@ module.exports.callback = async (event, context) => {
       sendMessage.push(
         'ルビィのために沼津近辺のさわやかの混雑状況を調べてきましたわ。',
         '',
-        storeStatuses.map(
-          s => s.waitCount === "-" && s.waitTime === "-"
-            ? `${s.storeName}は 営業時間外`
-            : `${s.storeName}は ${s.waitCount}組で${s.waitTime}待ち`
-        ).join('、'),
+        storeStatuses.map(s => {
+          if (s.waitCount === "-" && s.waitTime === "-") {
+            return `${s.storeName}は 営業時間外`;
+          }
+
+          if (s.waitCount === "0" && s.waitTime === "約0分") {
+            return `${s.storeName}は 待ち無し`;
+          }
+
+          return `${s.storeName}は ${s.waitCount}組で${s.waitTime}待ち`;
+        }).join('、'),
         'ですわ。'
       );
     }
