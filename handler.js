@@ -9,6 +9,7 @@ const SawayakaStores = [
   'KR00398061', // 函南
   'KR00299583', // 沼津学園通り
   'KR00299563', // 御殿場
+  'KR00299582', // 長泉
 ];
 
 async function getSawayakaStoreStatus() {
@@ -32,11 +33,13 @@ async function getSawayakaStoreStatus() {
     return s;
   })
 }
- 
+
 module.exports.callback = async (event, context) => {
   try {
     const signature = crypto.createHmac('sha256', process.env.LINE_CHANNEL_SECRET).update(event.body).digest('base64');
-    const checkHeader = (event.headers || {})['X-Line-Signature'];
+    const headers = event.headers || {};
+    const checkHeader = headers['X-Line-Signature'] || headers['x-line-signature'];
+    // console.log(event)
 
     if (signature !== checkHeader) {
       console.log("signature check failed");
@@ -56,17 +59,16 @@ module.exports.callback = async (event, context) => {
 
     const text = mess.message.text;
 
-    if (text !== 'ゅびぃ、さわやかいきたい')    {
+    if (text !== 'ゅびぃ、さわやかいきたい') {
       return context.succeed({ statusCode: 200 });
     }
 
     const storeStatuses = await getSawayakaStoreStatus();
     const sendMessage = [];
-
     const notInBusinessHourStores = storeStatuses.filter(s => s.waitCount === "-" && s.waitTime === "-");
 
-    if (notInBusinessHourStores.length === storeStatuses.length)    {
-      sendMessage.push( '沼津近辺のさわやかは全て営業時間外ですわ。');
+    if (notInBusinessHourStores.length === storeStatuses.length) {
+      sendMessage.push('沼津近辺のさわやかは全て営業時間外ですわ。');
     } else {
       sendMessage.push(
         'ルビィのために沼津近辺のさわやかの混雑状況を調べてきましたわ。',
@@ -91,7 +93,9 @@ module.exports.callback = async (event, context) => {
       'text': sendMessage.join("\n"),
     })
 
-    console.log("ぅゅ！");
+    const user = await client.getProfile(mess.source.userId);
+    console.log("ぅゅ！ ", user.displayName);
+
     return context.succeed({ statusCode: 200 });
 
   } catch (e) {

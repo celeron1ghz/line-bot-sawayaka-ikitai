@@ -1,7 +1,7 @@
 service: line-bot-sawayaka-ikitai
 provider:
   name: aws
-  runtime: nodejs8.10
+  runtime: nodejs12.x
   stage: dev
   region: ap-northeast-1
   deploymentBucket: serverless-upload-ap-northeast-1

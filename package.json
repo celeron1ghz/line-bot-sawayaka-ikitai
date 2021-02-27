@@ -1,7 +1,6 @@
 {
   "dependencies": {
     "@line/bot-sdk": "^6.3.0",
-    "crypto": "^1.0.1",
     "superagent": "3.8.3"
   }
 }
