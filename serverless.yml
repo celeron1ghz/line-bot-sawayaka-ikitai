@@ -19,7 +19,13 @@ functions:
       LINE_CHANNEL_SECRET: "${ssm:/line/dia/channel_secret~true}"
 
 resources:
+  Description: ruby-chan want to go sawayaka
   Resources:
+    ## override
+    CallbackLogGroup:
+      Properties:
+        RetentionInDays: 7
+
     ## dns setting
     Domain:
       Type: AWS::ApiGateway::DomainName
