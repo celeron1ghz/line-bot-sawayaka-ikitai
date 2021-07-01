@@ -12,6 +12,7 @@ provider:
 functions:
   callback:
     handler: handler
+    description: sawayaka ikitai
     timeout: 30
     memorySize: 1024
     events:
