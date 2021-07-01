@@ -1,7 +1,9 @@
 service: line-bot-sawayaka-ikitai
+variablesResolutionMode: 20210326
+
 provider:
   name: aws
-  runtime: nodejs12.x
+  runtime: go1.x
   stage: dev
   region: ap-northeast-1
   deploymentBucket: serverless-upload-ap-northeast-1
@@ -9,20 +11,23 @@ provider:
 
 functions:
   callback:
-    handler: handler.callback
+    handler: handler
+    timeout: 30
+    memorySize: 1024
     events:
       - http:
           path: callback
           method: post
     environment:
-      LINE_ACCESS_TOKEN: "${ssm:/line/dia/access_token~true}"
-      LINE_CHANNEL_SECRET: "${ssm:/line/dia/channel_secret~true}"
+      LINE_ACCESS_TOKEN: "${ssm:/line/dia/access_token}"
+      LINE_CHANNEL_SECRET: "${ssm:/line/dia/channel_secret}"
 
 resources:
   Description: ruby-chan want to go sawayaka
   Resources:
     ## override
     CallbackLogGroup:
+      Type: AWS::Logs::LogGroup
       Properties:
         RetentionInDays: 7
 
@@ -30,14 +35,14 @@ resources:
     Domain:
       Type: AWS::ApiGateway::DomainName
       Properties:
-        CertificateArn: "${ssm:/acm/camelon.info~true}"
+        CertificateArn: "${ssm:/acm/camelon.info}"
         DomainName: "sawayaka.camelon.info"
 
     Mapping:
       Type: AWS::ApiGateway::BasePathMapping
       Properties:
         DomainName: { Ref: Domain }
-        RestApiId:  { Ref: ApiGatewayRestApi }
+        RestApiId: { Ref: ApiGatewayRestApi }
         Stage: dev
 
     RecordSetOfAPI:
